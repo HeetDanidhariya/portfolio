@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en" x-data="app()" :class="{'dark':dark}" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Heet Danidhariya — Professional Android and Flutter Mobile App Developer. Building high-performance, 60fps native Android and cross-platform Flutter applications.">
+<meta name="keywords" content="Heet Danidhariya, Android Developer, Flutter Developer, Mobile App Developer, Kotlin, Jetpack Compose, Dart, Room DB, Retrofit, Firebase, Stripe">
+<meta name="author" content="Heet Danidhariya">
+<meta property="og:title" content="Heet Danidhariya — Android & Flutter Mobile App Developer">
+<meta property="og:description" content="Crafting fluid 60fps mobile experiences, native Android architectures, and cross-platform Flutter applications.">
+<meta property="og:type" content="website">
+<title>Heet Danidhariya | Android & Flutter Mobile App Developer</title>
+
+<!-- Tailwind CSS & Alpine.js -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: { display: ['PT Sans','sans-serif'], body: ['DM Sans','sans-serif'] },
+      colors: { 
+        accent: '#FF6B2B', 
+        'accent-light': '#FF8F5C' 
+      }
+    }
+  }
+}
+</script>
+
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html,body{font-family:'DM Sans',sans-serif;scroll-behavior:smooth}
+h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
+body{transition:background-color .3s,color .3s}
+
+/* Noise overlay */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E")
+}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#FF6B2B;border-radius:99px}
+
+/* Reveal on scroll */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s cubic-bezier(.4,0,.2,1),transform .65s cubic-bezier(.4,0,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}.d5{transition-delay:.40s}
+
+/* Nav link underline animation */
+.nl{position:relative}
+.nl::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:2px;background:#FF6B2B;transition:width .25s cubic-bezier(.4,0,.2,1)}
+.nl:hover::after,.nl.on::after{width:100%}
+.nl.on{color:#FF6B2B!important;font-weight:600}
+
+/* Shimmer button animation */
+.shimmer{position:relative;overflow:hidden}
+.shimmer::after{content:'';position:absolute;top:0;left:-120%;width:60%;height:100%;background:rgba(255,255,255,.22);transform:skewX(-20deg);transition:left .55s cubic-bezier(.4,0,.2,1)}
+.shimmer:hover::after{left:180%}
+
+/* Card hover lift & glow */
+.card-h{transition:transform .3s cubic-bezier(.4,0,.2,1),box-shadow .3s cubic-bezier(.4,0,.2,1),border-color .2s}
+.card-h:hover{transform:translateY(-6px);box-shadow:0 16px 32px -10px rgba(255,107,43,.12)}
+
+/* Radar pulse animation for status badge */
+@keyframes radarPing {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255,107,43,0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255,107,43,0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255,107,43,0); }
+}
+.radar-pulse{animation: radarPing 2.2s infinite cubic-bezier(.4,0,.2,1)}
+
+/* Floating keyframe animations */
+@keyframes floatUp {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(1.2deg); }
+}
+@keyframes floatDown {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(10px) rotate(-1.2deg); }
+}
+.float-1{animation: floatUp 4.5s ease-in-out infinite}
+.float-2{animation: floatDown 5.2s ease-in-out infinite}
+.float-3{animation: floatUp 6s ease-in-out infinite}
+
+/* Subtle glow orb */
+@keyframes ambientGlow {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50% { opacity: 0.65; transform: scale(1.1); }
+}
+.glow-pulse{animation: ambientGlow 6s ease-in-out infinite}
+
+/* Phone Simulator styling */
+.phone-frame {
+  box-shadow: 0 25px 60px -15px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.1);
+  transition: transform .4s cubic-bezier(.4,0,.2,1), box-shadow .4s cubic-bezier(.4,0,.2,1);
+}
+.phone-frame:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 30px 70px -15px rgba(255,107,43,0.22), 0 0 0 2px rgba(255,107,43,0.4);
+}
+
+/* 3D tilt perspective wrapper */
+.perspective-wrap {
+  perspective: 1000px;
+}
+
+[x-cloak]{display:none!important}
+</style>
+</head>
+
+<body class="bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 antialiased selection:bg-accent selection:text-white">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     HEADER / NAVIGATION
+═══════════════════════════════════════════════════════════════ -->
+<header class="fixed inset-x-0 top-0 z-50 transition-all duration-300"
+  :class="sc ? 'bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md shadow-sm shadow-black/5 border-b border-zinc-200/50 dark:border-zinc-800/50' : 'bg-transparent'">
+  <nav class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between" aria-label="Main navigation">
+
+    <!-- Logo / Brand -->
+    <a href="#hero" class="group flex items-center gap-2.5 font-display font-bold text-xl tracking-tight z-10">
+      <span class="w-8 h-8 rounded-xl bg-accent/10 dark:bg-accent/20 border border-accent/30 flex items-center justify-center text-accent group-hover:scale-105 transition-transform">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-1.0001s.4482-1.0001.9993-1.0001c.5516 0 .9998.4486.9998 1.0001s-.4482 1.0001-.9998 1.0001m-11.046 0c-.5511 0-.9993-.4486-.9993-1.0001s.4482-1.0001.9993-1.0001c.5516 0 .9998.4486.9998 1.0001s-.4482 1.0001-.9998 1.0001m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.4116 13.8533 8.0818 12 8.0818c-1.8533 0-3.5902.3298-5.1374.8678L4.8403 5.4467a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/>
+        </svg>
+      </span>
+      <span class="text-zinc-900 dark:text-white">Heet</span><span class="text-accent">.dev</span>
+    </a>
+
+    <!-- Desktop Navigation Links -->
+    <ul class="hidden md:flex items-center gap-7 text-sm font-medium" role="list">
+      <li><a href="#work" class="nl text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors" :class="s==='work'?'on':''">Work</a></li>
+      <li><a href="#services" class="nl text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors" :class="s==='services'?'on':''">Specialties</a></li>
+      <li><a href="#architecture" class="nl text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors" :class="s==='architecture'?'on':''">Architecture</a></li>
+      <li><a href="#skills" class="nl text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors" :class="s==='skills'?'on':''">Skills</a></li>
+      <li><a href="#about" class="nl text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors" :class="s==='about'?'on':''">About</a></li>
+      <li><a href="#contact" class="nl text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors" :class="s==='contact'?'on':''">Contact</a></li>
+    </ul>
+
+    <!-- Action Buttons -->
+    <div class="flex items-center gap-3">
+      <!-- Dark/Light Mode Toggle -->
+      <button @click="dark=!dark" class="w-9 h-9 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 transition-colors" :aria-label="dark?'Light mode':'Dark mode'">
+        <svg x-show="!dark" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        <svg x-show="dark" class="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+      </button>
+
+      <!-- Hire Me Shimmer CTA -->
+      <a href="#contact" class="hidden md:inline-flex items-center gap-2 shimmer bg-accent text-white text-sm font-medium px-5 py-2 rounded-full hover:bg-accent-light shadow-sm shadow-accent/20 transition-all hover:scale-[1.02]">
+        <span>Hire Me</span>
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </a>
+
+      <!-- Mobile Hamburger Button -->
+      <button @click="mm=!mm" class="md:hidden w-9 h-9 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300" :aria-expanded="mm" aria-label="Toggle menu">
+        <svg x-show="!mm" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg x-show="mm" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Dropdown Menu -->
+  <div x-show="mm" x-cloak
+    x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+    x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-2"
+    class="md:hidden bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 shadow-xl">
+    <ul class="flex flex-col px-6 py-5 gap-4 text-sm font-medium" role="list">
+      <li><a href="#work" @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Work &amp; Mobile Apps</a></li>
+      <li><a href="#services" @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Specialties</a></li>
+      <li><a href="#architecture" @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Architecture &amp; Pipeline</a></li>
+      <li><a href="#skills" @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Skills &amp; Tech Stack</a></li>
+      <li><a href="#about" @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">About &amp; Experience</a></li>
+      <li><a href="#contact" @click="mm=false" class="block text-zinc-700 dark:text-zinc-300 hover:text-accent transition-colors">Contact</a></li>
+      <li class="pt-3 border-t border-zinc-100 dark:border-zinc-800">
+        <a href="#contact" @click="mm=false" class="shimmer inline-flex items-center justify-center w-full bg-accent text-white font-medium text-sm py-2.5 rounded-full shadow-md shadow-accent/20">
+          Start a Mobile Project →
+        </a>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<main class="relative overflow-hidden">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     HERO SECTION
+═══════════════════════════════════════════════════════════════ -->
+<section id="hero" class="relative pt-28 pb-20 md:pt-36 md:pb-28 flex items-center overflow-hidden">
+  <!-- Ambient background glow elements (Orange accent preserved) -->
+  <div class="absolute top-1/4 right-5 w-96 h-96 bg-accent/15 rounded-full blur-3xl pointer-events-none glow-pulse" aria-hidden="true"></div>
+  <div class="absolute bottom-10 left-5 w-80 h-80 bg-accent/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+  <div class="absolute top-1/2 left-1/3 w-64 h-64 bg-zinc-200/50 dark:bg-zinc-800/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+
+  <div class="relative z-10 max-w-6xl mx-auto px-6 w-full">
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+
+      <!-- Hero Copy Column -->
+      <div class="lg:col-span-7">
+        
+        <!-- Live Status Pill & Avatar -->
+        <div class="reveal flex flex-wrap items-center gap-3 mb-6">
+          <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-orange-50 dark:bg-zinc-900 border border-orange-200 dark:border-zinc-800">
+            <span class="w-2.5 h-2.5 rounded-full bg-accent radar-pulse"></span>
+            <span class="text-xs font-medium text-zinc-800 dark:text-zinc-200">
+              Available for Android &amp; Flutter Projects
+            </span>
+          </div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+            <img src="asset/me.png" alt="Heet Danidhariya" class="w-5 h-5 rounded-full object-cover border border-accent/40">
+            <span class="text-[11px] font-medium text-zinc-600 dark:text-zinc-400">Code Buddy's Dev</span>
+          </div>
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="reveal d1 font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[64px] leading-[1.08] tracking-tight text-zinc-900 dark:text-white mb-6">
+          Hi, I'm <span class="text-accent underline decoration-accent/30 decoration-wavy underline-offset-8">Heet Danidhariya</span>
+          <br>
+          <span class="text-zinc-800 dark:text-zinc-200 text-3xl sm:text-4xl md:text-5xl font-semibold">
+            Android &amp; Flutter Developer
+          </span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="reveal d2 text-base sm:text-lg text-zinc-600 dark:text-zinc-400 font-light leading-relaxed max-w-xl mb-8">
+          Architecting high-performance <strong class="font-medium text-zinc-800 dark:text-zinc-200">Native Android</strong> and <strong class="font-medium text-zinc-800 dark:text-zinc-200">Flutter cross-platform</strong> mobile applications with 60fps fluid motion, clean MVVM architecture, robust offline sync, and seamless API integrations.
+        </p>
+
+        <!-- CTAs -->
+        <div class="reveal d3 flex flex-wrap gap-4 items-center mb-12">
+          <a href="#work" class="shimmer inline-flex items-center gap-2 bg-accent text-white font-medium px-7 py-3.5 rounded-full hover:bg-accent-light transition-all shadow-md shadow-accent/20 text-sm hover:scale-[1.02]">
+            <span>Explore Apps &amp; Work</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </a>
+          
+          <a href="#contact" class="inline-flex items-center gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 font-medium px-6 py-3.5 rounded-full hover:border-accent dark:hover:border-accent hover:text-accent transition-colors text-sm">
+            <span>Get in Touch</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </a>
+
+          <a href="asset/about me.jpg" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 hover:text-accent transition-colors ml-1">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span>View Resume / Credentials</span>
+          </a>
+        </div>
+
+        <!-- Metric Counter Badges -->
+        <div class="reveal d4 grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8 border-t border-zinc-200/80 dark:border-zinc-800/80">
+          <div class="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-100 dark:border-zinc-800/60">
+            <p class="font-display font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white" x-text="counts.projects + '+'">15+</p>
+            <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Mobile Apps &amp; Modules</p>
+          </div>
+          <div class="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-100 dark:border-zinc-800/60">
+            <p class="font-display font-bold text-2xl sm:text-3xl text-accent" x-text="counts.crashFree + '%'">99.8%</p>
+            <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Crash-Free Sessions</p>
+          </div>
+          <div class="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-100 dark:border-zinc-800/60">
+            <p class="font-display font-bold text-2xl sm:text-3xl text-zinc-900 dark:text-white" x-text="counts.experience + 'y+'">2y+</p>
+            <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Industry Experience</p>
+          </div>
+          <div class="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-100 dark:border-zinc-800/60">
+            <p class="font-display font-bold text-2xl sm:text-3xl text-accent">60 FPS</p>
+            <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Fluid UI Animation</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Hero Visual: Interactive Smartphone Simulator + Developer Badges -->
+      <div class="lg:col-span-5 reveal d2 flex flex-col items-center relative">
+
+        <!-- Floating Technology Shield Badges -->
+        <div class="hidden sm:flex absolute -top-4 -left-6 z-20 float-1 items-center gap-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-lg text-xs font-semibold text-zinc-800 dark:text-zinc-200">
+          <span class="w-2.5 h-2.5 rounded-full bg-accent"></span>
+          <span>Kotlin &amp; Compose</span>
+        </div>
+
+        <div class="hidden sm:flex absolute top-1/3 -right-6 z-20 float-2 items-center gap-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-lg text-xs font-semibold text-zinc-800 dark:text-zinc-200">
+          <span class="w-2.5 h-2.5 rounded-full bg-accent"></span>
+          <span>Flutter &amp; Dart</span>
+        </div>
+
+        <div class="hidden sm:flex absolute -bottom-4 -left-4 z-20 float-3 items-center gap-2 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-lg text-xs font-semibold text-zinc-800 dark:text-zinc-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <span>MVVM &amp; Clean Arch</span>
+        </div>
+
+        <!-- Phone Mockup Container -->
+        <div class="w-full max-w-[310px] sm:max-w-[330px]">
+          
+          <!-- Screen Switcher Tabs on top of phone -->
+          <div class="flex items-center justify-center gap-1.5 p-1.5 bg-zinc-100 dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 mb-3 shadow-sm">
+            <button @click="activeDemo = 'fintech'" :class="activeDemo==='fintech' ? 'bg-accent text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'" class="flex-1 py-1.5 px-2 text-[11px] font-medium rounded-xl transition-all">
+              FinPulse
+            </button>
+            <button @click="activeDemo = 'delivery'" :class="activeDemo==='delivery' ? 'bg-accent text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'" class="flex-1 py-1.5 px-2 text-[11px] font-medium rounded-xl transition-all">
+              FoodieGo
+            </button>
+            <button @click="activeDemo = 'fitness'" :class="activeDemo==='fitness' ? 'bg-accent text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'" class="flex-1 py-1.5 px-2 text-[11px] font-medium rounded-xl transition-all">
+              FitPulse
+            </button>
+          </div>
+
+          <!-- Smartphone Chassis -->
+          <div class="phone-frame relative bg-zinc-900 rounded-[44px] p-3 border-4 border-zinc-800 dark:border-zinc-700/80 shadow-2xl">
+            
+            <!-- Screen Bezel / Inner Display -->
+            <div class="relative bg-zinc-950 rounded-[36px] overflow-hidden border border-zinc-800 h-[520px] flex flex-col justify-between text-white select-none">
+              
+              <!-- Dynamic Island & Status Bar -->
+              <div class="pt-3 px-5 flex items-center justify-between text-[11px] text-zinc-400 shrink-0 z-30">
+                <span class="font-semibold tracking-tight text-white">9:41</span>
+                <!-- Notch Pill -->
+                <div class="w-20 h-4 bg-black rounded-full flex items-center justify-center gap-1 border border-zinc-800">
+                  <div class="w-1.5 h-1.5 rounded-full bg-zinc-700"></div>
+                  <div class="w-2.5 h-1 rounded-full bg-accent/60"></div>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"/></svg>
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+                </div>
+              </div>
+
+              <!-- SCREEN 1: FinPulse (Flutter Fintech App) -->
+              <div x-show="activeDemo==='fintech'" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-y-3" x-transition:enter-end="opacity-100 translate-y-0" class="flex-1 p-4 flex flex-col justify-between overflow-hidden">
+                <div>
+                  <div class="flex items-center justify-between mt-2 mb-4">
+                    <div>
+                      <p class="text-[10px] uppercase tracking-wider text-zinc-400">Total Portfolio</p>
+                      <p class="font-display text-2xl font-bold text-white">$28,450.80</p>
+                    </div>
+                    <span class="text-[10px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full">+14.2%</span>
+                  </div>
+
+                  <!-- Mini Card Graphic -->
+                  <div class="rounded-2xl bg-gradient-to-tr from-accent to-accent-light p-4 shadow-lg text-white mb-4">
+                    <div class="flex justify-between items-center text-xs mb-3">
+                      <span class="font-medium tracking-wide">FinPulse Black Card</span>
+                      <span class="font-mono text-[10px]">FLUTTER UI</span>
+                    </div>
+                    <p class="font-mono text-xs tracking-widest mb-3">••••  ••••  ••••  8924</p>
+                    <div class="flex justify-between text-[10px] opacity-90">
+                      <span>HEET DANIDHARIYA</span>
+                      <span>EXP 09/28</span>
+                    </div>
+                  </div>
+
+                  <!-- Quick Action Buttons -->
+                  <div class="grid grid-cols-3 gap-2 mb-4">
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-2 text-center">
+                      <div class="w-6 h-6 mx-auto rounded-lg bg-accent/20 text-accent flex items-center justify-center text-xs font-bold mb-1">↑</div>
+                      <span class="text-[10px] text-zinc-300">Send</span>
+                    </div>
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-2 text-center">
+                      <div class="w-6 h-6 mx-auto rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold mb-1">↓</div>
+                      <span class="text-[10px] text-zinc-300">Receive</span>
+                    </div>
+                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-2 text-center">
+                      <div class="w-6 h-6 mx-auto rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold mb-1">⇄</div>
+                      <span class="text-[10px] text-zinc-300">Swap</span>
+                    </div>
+                  </div>
+
+                  <!-- Recent Transactions -->
+                  <p class="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-2">Live Stream Activity</p>
+                  <div class="space-y-2">
+                    <div class="flex items-center justify-between p-2 rounded-xl bg-zinc-900/60 border border-zinc-800/80 text-xs">
+                      <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-lg bg-orange-500/20 text-accent flex items-center justify-center text-[10px]">⚡</span>
+                        <div>
+                          <p class="font-medium text-white text-[11px]">Stripe Checkout</p>
+                          <p class="text-[9px] text-zinc-500">API Webhook</p>
+                        </div>
+                      </div>
+                      <span class="font-semibold text-emerald-400 text-[11px]">+$850.00</span>
+                    </div>
+                    <div class="flex items-center justify-between p-2 rounded-xl bg-zinc-900/60 border border-zinc-800/80 text-xs">
+                      <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-lg bg-zinc-800 text-zinc-300 flex items-center justify-center text-[10px]">☁</span>
+                        <div>
+                          <p class="font-medium text-white text-[11px]">Firebase Cloud Sync</p>
+                          <p class="text-[9px] text-zinc-500">Firestore Live</p>
+                        </div>
+                      </div>
+                      <span class="text-zinc-400 text-[11px]">Synced</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-center pt-2">
+                  <span class="text-[9px] text-zinc-500 font-mono">Riverpod State · 60fps Native</span>
+                </div>
+              </div>
+
+              <!-- SCREEN 2: FoodieGo (Native Android Delivery App) -->
+              <div x-show="activeDemo==='delivery'" x-cloak x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-y-3" x-transition:enter-end="opacity-100 translate-y-0" class="flex-1 p-4 flex flex-col justify-between overflow-hidden">
+                <div>
+                  <!-- Map Mock Header -->
+                  <div class="relative h-32 rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden mb-3 p-3 flex flex-col justify-between">
+                    <div class="absolute inset-0 opacity-25 bg-[radial-gradient(#FF6B2B_1px,transparent_1px)] [background-size:12px_12px]"></div>
+                    <div class="relative z-10 flex justify-between items-center">
+                      <span class="text-[10px] bg-accent text-white px-2 py-0.5 rounded-full font-semibold">Live GPS Tracker</span>
+                      <span class="text-[10px] text-zinc-400 font-mono">Google Maps SDK</span>
+                    </div>
+                    <div class="relative z-10 flex items-center gap-2">
+                      <div class="w-7 h-7 rounded-full bg-accent text-white flex items-center justify-center text-xs animate-bounce">🛵</div>
+                      <div class="text-[10px]">
+                        <p class="font-bold text-white">Courier Arriving in 6m</p>
+                        <p class="text-zinc-400 text-[9px]">Laravel Backend Dispatch</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Order Card -->
+                  <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-3 mb-3">
+                    <div class="flex justify-between items-center mb-2">
+                      <p class="text-[11px] font-bold text-white">Gourmet Burger &amp; Shake</p>
+                      <span class="text-[10px] text-accent font-semibold">$24.50</span>
+                    </div>
+                    <div class="space-y-1 text-[10px] text-zinc-400">
+                      <div class="flex justify-between">
+                        <span>Preparation:</span>
+                        <span class="text-emerald-400 font-medium">Completed</span>
+                      </div>
+                      <div class="flex justify-between">
+                        <span>Payment Gateway:</span>
+                        <span class="text-zinc-300">Stripe SDK (Captured)</span>
+                      </div>
+                      <div class="flex justify-between">
+                        <span>Local Cache:</span>
+                        <span class="text-zinc-300">Room DB Offline-First</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Delivery Progress bar -->
+                  <div class="space-y-1.5">
+                    <div class="flex justify-between text-[10px] text-zinc-400">
+                      <span>Order Placed</span>
+                      <span class="text-accent font-medium">On the Road</span>
+                      <span>Delivered</span>
+                    </div>
+                    <div class="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+                      <div class="bg-accent h-full w-2/3 rounded-full"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-center pt-2">
+                  <span class="text-[9px] text-zinc-500 font-mono">Kotlin · Jetpack Compose · Coroutines</span>
+                </div>
+              </div>
+
+              <!-- SCREEN 3: FitPulse (IoT & Health App) -->
+              <div x-show="activeDemo==='fitness'" x-cloak x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-y-3" x-transition:enter-end="opacity-100 translate-y-0" class="flex-1 p-4 flex flex-col justify-between overflow-hidden">
+                <div>
+                  <div class="flex items-center justify-between mt-2 mb-3">
+                    <div>
+                      <p class="text-[10px] uppercase tracking-wider text-zinc-400">Daily Health Target</p>
+                      <p class="font-display text-xl font-bold text-white">8,420 / 10,000</p>
+                    </div>
+                    <span class="text-[10px] bg-accent/20 text-accent border border-accent/30 px-2 py-0.5 rounded-full font-semibold">84% Goal</span>
+                  </div>
+
+                  <!-- Metric Radial Mock -->
+                  <div class="rounded-2xl bg-zinc-900 border border-zinc-800 p-3 mb-3 flex items-center justify-around">
+                    <div class="text-center">
+                      <p class="text-accent font-display text-lg font-bold">124</p>
+                      <p class="text-[9px] text-zinc-400 uppercase">BPM Heart</p>
+                    </div>
+                    <div class="w-[1px] h-8 bg-zinc-800"></div>
+                    <div class="text-center">
+                      <p class="text-white font-display text-lg font-bold">540</p>
+                      <p class="text-[9px] text-zinc-400 uppercase">KCal Burned</p>
+                    </div>
+                    <div class="w-[1px] h-8 bg-zinc-800"></div>
+                    <div class="text-center">
+                      <p class="text-emerald-400 font-display text-lg font-bold">6.2</p>
+                      <p class="text-[9px] text-zinc-400 uppercase">KM Traveled</p>
+                    </div>
+                  </div>
+
+                  <!-- Real-time Chart Mock -->
+                  <div class="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-3">
+                    <div class="flex justify-between items-center mb-2">
+                      <p class="text-[10px] font-semibold text-zinc-300">Live Heart Rate Graph</p>
+                      <span class="w-2 h-2 rounded-full bg-accent animate-ping"></span>
+                    </div>
+                    <div class="h-16 flex items-end gap-1.5 pt-2">
+                      <div class="flex-1 bg-zinc-800 rounded-t h-1/3"></div>
+                      <div class="flex-1 bg-zinc-800 rounded-t h-1/2"></div>
+                      <div class="flex-1 bg-accent/60 rounded-t h-3/4"></div>
+                      <div class="flex-1 bg-accent rounded-t h-full"></div>
+                      <div class="flex-1 bg-accent/80 rounded-t h-4/5"></div>
+                      <div class="flex-1 bg-accent/50 rounded-t h-2/3"></div>
+                      <div class="flex-1 bg-zinc-800 rounded-t h-1/2"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-center pt-2">
+                  <span class="text-[9px] text-zinc-500 font-mono">Flutter CustomPainter · Bluetooth BLE</span>
+                </div>
+              </div>
+
+              <!-- Phone Bottom Navigation Bar -->
+              <div class="h-12 bg-zinc-900/95 border-t border-zinc-800/90 flex items-center justify-around px-4 text-zinc-400 shrink-0">
+                <span class="text-accent text-sm">●</span>
+                <span class="text-xs hover:text-white">◼</span>
+                <span class="text-xs hover:text-white">▲</span>
+              </div>
+
+            </div>
+          </div>
+          
+          <div class="text-center mt-3">
+            <span class="text-xs text-zinc-500 dark:text-zinc-400 flex items-center justify-center gap-1.5">
+              <span>Interactive Smartphone Simulation</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+              <span>Tap tabs to test</span>
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     CORE SPECIALTIES / SERVICES
+═══════════════════════════════════════════════════════════════ -->
+<section id="services" class="py-24 bg-zinc-50 dark:bg-zinc-900/40 relative">
+  <div class="max-w-6xl mx-auto px-6">
+    
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-14">
+      <div>
+        <p class="reveal text-xs font-semibold text-accent tracking-widest uppercase mb-2">Core Competencies</p>
+        <h2 class="reveal d1 font-display font-bold text-3xl sm:text-4xl md:text-5xl text-zinc-900 dark:text-white">
+          Mobile Engineering Specialties
+        </h2>
+      </div>
+      <p class="reveal d2 text-sm text-zinc-500 dark:text-zinc-400 max-w-md">
+        From architectural foundations to pixel-perfect animation and store deployment, every mobile application is engineered for speed, stability, and scale.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <!-- 1. Native Android Development -->
+      <article class="reveal d1 card-h group bg-white dark:bg-zinc-900 rounded-3xl p-7 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent dark:hover:border-accent flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 flex items-center justify-center bg-orange-50 dark:bg-zinc-800 text-accent rounded-2xl mb-6 group-hover:bg-accent group-hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-1.0001s.4482-1.0001.9993-1.0001c.5516 0 .9998.4486.9998 1.0001s-.4482 1.0001-.9998 1.0001m-11.046 0c-.5511 0-.9993-.4486-.9993-1.0001s.4482-1.0001.9993-1.0001c.5516 0 .9998.4486.9998 1.0001s-.4482 1.0001-.9998 1.0001m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.4116 13.8533 8.0818 12 8.0818c-1.8533 0-3.5902.3298-5.1374.8678L4.8403 5.4467a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-xl text-zinc-900 dark:text-white mb-3">Native Android (Kotlin)</h3>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-5">
+            Production Android apps built with modern Kotlin, Jetpack Compose, Coroutines, StateFlow, Room Database, and Material Design 3. Fully optimized for memory, battery, and peak performance.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-1.5 pt-4 border-t border-zinc-100 dark:border-zinc-800/80 text-[11px] text-zinc-500 dark:text-zinc-400 font-mono">
+          <span class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">Kotlin</span>
+          <span class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">Compose</span>
+          <span class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">Room</span>
+        </div>
+      </article>
+
+      <!-- 2. Flutter Cross-Platform -->
+      <article class="reveal d2 card-h group bg-white dark:bg-zinc-900 rounded-3xl p-7 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent dark:hover:border-accent flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 flex items-center justify-center bg-orange-50 dark:bg-zinc-800 text-accent rounded-2xl mb-6 group-hover:bg-accent group-hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M14.314 0L2.3 12 6 15.7 21.684 0h-7.37zM6 15.7L2.3 12 14.314 24h7.37L9.686 12 6 15.7z"/>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-xl text-zinc-900 dark:text-white mb-3">Flutter Cross-Platform</h3>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-5">
+            Multi-platform iOS and Android apps with a single, maintainable Dart codebase. Leveraging BLoC and Riverpod state management, custom painters, and 60fps responsive motion design.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-1.5 pt-4 border-t border-zinc-100 dark:border-zinc-800/80 text-[11px] text-zinc-500 dark:text-zinc-400 font-mono">
+          <span class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">Dart</span>
+          <span class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">Riverpod</span>
+          <span class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">iOS/Android</span>
+        </div>
+      </article>
+
+      <!-- 3. Clean Architecture & APIs -->
+      <article class="reveal d3 card-h group bg-white dark:bg-zinc-900 rounded-3xl p-7 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent dark:hover:border-accent flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 flex items-center justify-center bg-orange-50 dark:bg-zinc-800 text-accent rounded-2xl mb-6 group-hover:bg-accent group-hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7C5 4 4 5 4 7zm0 4h16M8 4v4m8-4v4"/>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-xl text-zinc-900 dark:text-white mb-3">Architecture &amp; REST APIs</h3>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-5">
+            Decoupled Clean Architecture (MVVM/MVI) with dependency injection. Seamless RESTful API consumption, WebSockets, background synchronization, and Laravel backend service collaboration.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-1.5 pt-4 border-t border-zinc-100 dark:border-zinc-800/80 text-[11px] text-zinc-500 dark:text-zinc-400 font-mono">
+          <span class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">MVVM</span>
+          <span class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">Retrofit</span>
+          <span class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">Laravel</span>
+        </div>
+      </article>
+
+      <!-- 4. Payments, Security & DevOps -->
+      <article class="reveal d4 card-h group bg-white dark:bg-zinc-900 rounded-3xl p-7 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent dark:hover:border-accent flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 flex items-center justify-center bg-orange-50 dark:bg-zinc-800 text-accent rounded-2xl mb-6 group-hover:bg-accent group-hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+          </div>
+          <h3 class="font-display font-bold text-xl text-zinc-900 dark:text-white mb-3">Payments, Cloud &amp; Release</h3>
+          <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-5">
+            End-to-end integration with Stripe SDK for in-app payments, Firebase Suite (Auth, Firestore, FCM, Crashlytics), encrypted credentials storage, and Google Play Store automated deployment.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-1.5 pt-4 border-t border-zinc-100 dark:border-zinc-800/80 text-[11px] text-zinc-500 dark:text-zinc-400 font-mono">
+          <span class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">Stripe</span>
+          <span class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">Firebase</span>
+          <span class="px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800">Play Store</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     FEATURED WORK / MOBILE APPS SHOWCASE
+═══════════════════════════════════════════════════════════════ -->
+<section id="work" class="py-24 relative" x-data="{ projectFilter: 'all' }">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <!-- Section Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+      <div>
+        <p class="reveal text-xs font-semibold text-accent tracking-widest uppercase mb-2">Featured Portfolio</p>
+        <h2 class="reveal d1 font-display font-bold text-3xl sm:text-4xl md:text-5xl text-zinc-900 dark:text-white">
+          Selected Mobile Apps
+        </h2>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="reveal d2 flex flex-wrap gap-2">
+        <button @click="projectFilter = 'all'" :class="projectFilter === 'all' ? 'bg-accent text-white border-accent' : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:border-accent'" class="text-xs font-medium px-4 py-2 rounded-full border transition-all">
+          All Apps (5)
+        </button>
+        <button @click="projectFilter = 'flutter'" :class="projectFilter === 'flutter' ? 'bg-accent text-white border-accent' : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:border-accent'" class="text-xs font-medium px-4 py-2 rounded-full border transition-all">
+          Flutter
+        </button>
+        <button @click="projectFilter = 'android'" :class="projectFilter === 'android' ? 'bg-accent text-white border-accent' : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:border-accent'" class="text-xs font-medium px-4 py-2 rounded-full border transition-all">
+          Native Android
+        </button>
+        <button @click="projectFilter = 'fintech'" :class="projectFilter === 'fintech' ? 'bg-accent text-white border-accent' : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:border-accent'" class="text-xs font-medium px-4 py-2 rounded-full border transition-all">
+          Fintech &amp; Commerce
+        </button>
+      </div>
+    </div>
+
+    <!-- Projects Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
+
+      <!-- PROJECT 1: FinPulse -->
+      <article x-show="projectFilter === 'all' || projectFilter === 'flutter' || projectFilter === 'fintech'" 
+        x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+        class="reveal d1 card-h group rounded-3xl overflow-hidden bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent dark:hover:border-accent flex flex-col justify-between">
+        <div>
+          <!-- Project Visual Banner -->
+          <div class="relative h-56 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-950 p-5 flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-accent/10 opacity-30"></div>
+            <!-- Mock Phone Preview Inside Card -->
+            <div class="w-36 h-48 bg-zinc-950 rounded-2xl border-2 border-zinc-700 p-2 shadow-2xl transform group-hover:scale-105 group-hover:-rotate-1 transition-all duration-300">
+              <div class="w-full h-full bg-gradient-to-b from-zinc-900 to-zinc-950 rounded-xl p-2 flex flex-col justify-between">
+                <div class="flex justify-between items-center text-[9px] text-zinc-400">
+                  <span class="text-accent font-bold">FinPulse</span>
+                  <span>9:41</span>
+                </div>
+                <div class="p-2 rounded-lg bg-accent/20 border border-accent/30 text-center">
+                  <p class="text-[8px] text-zinc-400">Portfolio</p>
+                  <p class="text-[12px] font-bold text-white">$28,450</p>
+                </div>
+                <div class="h-6 bg-zinc-800/80 rounded-md"></div>
+              </div>
+            </div>
+            <span class="absolute top-4 right-4 bg-accent text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Flutter</span>
+          </div>
+
+          <div class="p-7">
+            <div class="flex flex-wrap gap-2 mb-3">
+              <span class="text-xs bg-orange-50 dark:bg-zinc-800 text-accent border border-orange-200 dark:border-zinc-700 px-2.5 py-1 rounded-full font-medium">Fintech</span>
+              <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2.5 py-1 rounded-full">Riverpod</span>
+              <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2.5 py-1 rounded-full">Biometrics</span>
+            </div>
+            
+            <h3 class="font-display font-bold text-2xl text-zinc-900 dark:text-white mb-2 group-hover:text-accent transition-colors">
+              FinPulse — Crypto &amp; Fiat Wallet
+            </h3>
+            
+            <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+              Modern multi-currency financial wallet app with real-time WebSocket market updates, biometric fingerprint/FaceID authentication, interactive chart visualization, and Stripe payout integration.
+            </p>
+
+            <ul class="text-xs text-zinc-500 dark:text-zinc-400 space-y-1.5 mb-6">
+              <li class="flex items-center gap-2">
+                <span class="text-accent font-bold">✓</span> 60fps responsive charts via CustomPainter
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-accent font-bold">✓</span> Encrypted local key storage &amp; Clean Architecture
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="px-7 pb-6 pt-2 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
+          <a href="case-study.html" class="inline-flex items-center gap-1.5 text-sm font-semibold text-accent nl">
+            Read Case Study →
+          </a>
+          <span class="text-xs text-zinc-400 font-mono">Flutter &amp; Dart</span>
+        </div>
+      </article>
+
+      <!-- PROJECT 2: FoodieGo -->
+      <article x-show="projectFilter === 'all' || projectFilter === 'android' || projectFilter === 'fintech'" 
+        x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+        class="reveal d2 card-h group rounded-3xl overflow-hidden bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent dark:hover:border-accent flex flex-col justify-between">
+        <div>
+          <!-- Project Visual Banner -->
+          <div class="relative h-56 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-950 p-5 flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-accent/10 opacity-30"></div>
+            <!-- Mock Phone Preview -->
+            <div class="w-36 h-48 bg-zinc-950 rounded-2xl border-2 border-zinc-700 p-2 shadow-2xl transform group-hover:scale-105 group-hover:rotate-1 transition-all duration-300">
+              <div class="w-full h-full bg-gradient-to-b from-zinc-900 to-zinc-950 rounded-xl p-2 flex flex-col justify-between">
+                <div class="flex justify-between items-center text-[9px] text-zinc-400">
+                  <span class="text-accent font-bold">FoodieGo</span>
+                  <span>GPS On</span>
+                </div>
+                <div class="p-2 rounded-lg bg-zinc-800 border border-zinc-700 text-center">
+                  <p class="text-[8px] text-accent">Arriving in 6m</p>
+                  <p class="text-[11px] font-bold text-white">🛵 Courier Live</p>
+                </div>
+                <div class="h-6 bg-accent/40 rounded-md"></div>
+              </div>
+            </div>
+            <span class="absolute top-4 right-4 bg-zinc-800 text-zinc-200 border border-zinc-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Android</span>
+          </div>
+
+          <div class="p-7">
+            <div class="flex flex-wrap gap-2 mb-3">
+              <span class="text-xs bg-orange-50 dark:bg-zinc-800 text-accent border border-orange-200 dark:border-zinc-700 px-2.5 py-1 rounded-full font-medium">On-Demand</span>
+              <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2.5 py-1 rounded-full">Kotlin</span>
+              <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2.5 py-1 rounded-full">Google Maps</span>
+            </div>
+            
+            <h3 class="font-display font-bold text-2xl text-zinc-900 dark:text-white mb-2 group-hover:text-accent transition-colors">
+              FoodieGo — Delivery &amp; Live Tracking
+            </h3>
+            
+            <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+              Real-time food ordering and courier dispatch app. Integrated Google Maps SDK for smooth driver pin movement, Room Database for offline cart persistence, and Laravel REST API endpoints.
+            </p>
+
+            <ul class="text-xs text-zinc-500 dark:text-zinc-400 space-y-1.5 mb-6">
+              <li class="flex items-center gap-2">
+                <span class="text-accent font-bold">✓</span> Push notifications via Firebase Cloud Messaging (FCM)
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-accent font-bold">✓</span> Stripe Mobile Payment Gateway integration
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="px-7 pb-6 pt-2 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
+          <a href="case-study.html" class="inline-flex items-center gap-1.5 text-sm font-semibold text-accent nl">
+            Read Case Study →
+          </a>
+          <span class="text-xs text-zinc-400 font-mono">Kotlin &amp; Retrofit</span>
+        </div>
+      </article>
+
+      <!-- PROJECT 3: ShopVibe E-Commerce -->
+      <article x-show="projectFilter === 'all' || projectFilter === 'android' || projectFilter === 'fintech'" 
+        x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+        class="reveal d3 card-h group rounded-3xl overflow-hidden bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent dark:hover:border-accent flex flex-col justify-between">
+        <div>
+          <!-- Project Visual Banner -->
+          <div class="relative h-56 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-950 p-5 flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-accent/10 opacity-30"></div>
+            <!-- Mock Phone Preview -->
+            <div class="w-36 h-48 bg-zinc-950 rounded-2xl border-2 border-zinc-700 p-2 shadow-2xl transform group-hover:scale-105 group-hover:-rotate-1 transition-all duration-300">
+              <div class="w-full h-full bg-gradient-to-b from-zinc-900 to-zinc-950 rounded-xl p-2 flex flex-col justify-between">
+                <div class="flex justify-between items-center text-[9px] text-zinc-400">
+                  <span class="text-accent font-bold">ShopVibe</span>
+                  <span>Cart (3)</span>
+                </div>
+                <div class="p-2 rounded-lg bg-zinc-800/80 border border-zinc-700 text-center">
+                  <p class="text-[8px] text-zinc-400">Material 3 UI</p>
+                  <p class="text-[11px] font-bold text-white">Summer Drop</p>
+                </div>
+                <div class="h-6 bg-accent rounded-md text-[8px] text-white flex items-center justify-center font-bold">1-Click Pay</div>
+              </div>
+            </div>
+            <span class="absolute top-4 right-4 bg-zinc-800 text-zinc-200 border border-zinc-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Android</span>
+          </div>
+
+          <div class="p-7">
+            <div class="flex flex-wrap gap-2 mb-3">
+              <span class="text-xs bg-orange-50 dark:bg-zinc-800 text-accent border border-orange-200 dark:border-zinc-700 px-2.5 py-1 rounded-full font-medium">E-Commerce</span>
+              <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2.5 py-1 rounded-full">Compose</span>
+              <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2.5 py-1 rounded-full">Stripe SDK</span>
+            </div>
+            
+            <h3 class="font-display font-bold text-2xl text-zinc-900 dark:text-white mb-2 group-hover:text-accent transition-colors">
+              ShopVibe — Multi-Vendor Store
+            </h3>
+            
+            <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+              Modern native retail storefront engineered with Jetpack Compose. Features complex filter hierarchies, dynamic animations, multi-step checkout with Stripe PaymentSheet, and Room DB wishlist.
+            </p>
+
+            <ul class="text-xs text-zinc-500 dark:text-zinc-400 space-y-1.5 mb-6">
+              <li class="flex items-center gap-2">
+                <span class="text-accent font-bold">✓</span> 100% declarative UI with Jetpack Compose
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-accent font-bold">✓</span> Reduced checkout abandonment rate by 22%
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="px-7 pb-6 pt-2 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
+          <a href="case-study.html" class="inline-flex items-center gap-1.5 text-sm font-semibold text-accent nl">
+            Read Case Study →
+          </a>
+          <span class="text-xs text-zinc-400 font-mono">Compose &amp; Stripe</span>
+        </div>
+      </article>
+
+      <!-- PROJECT 4: FitPulse Pro -->
+      <article x-show="projectFilter === 'all' || projectFilter === 'flutter'" 
+        x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+        class="reveal d1 card-h group rounded-3xl overflow-hidden bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent dark:hover:border-accent flex flex-col justify-between">
+        <div>
+          <div class="relative h-56 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-950 p-5 flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-accent/10 opacity-30"></div>
+            <div class="w-36 h-48 bg-zinc-950 rounded-2xl border-2 border-zinc-700 p-2 shadow-2xl transform group-hover:scale-105 group-hover:rotate-1 transition-all duration-300">
+              <div class="w-full h-full bg-gradient-to-b from-zinc-900 to-zinc-950 rounded-xl p-2 flex flex-col justify-between">
+                <div class="flex justify-between items-center text-[9px] text-zinc-400">
+                  <span class="text-accent font-bold">FitPulse</span>
+                  <span>BLE Synced</span>
+                </div>
+                <div class="p-2 rounded-lg bg-zinc-800 border border-zinc-700 text-center">
+                  <p class="text-[8px] text-emerald-400">Heart Rate: 124 BPM</p>
+                  <p class="text-[11px] font-bold text-white">8,420 Steps</p>
+                </div>
+                <div class="h-6 bg-zinc-800 rounded-md"></div>
+              </div>
+            </div>
+            <span class="absolute top-4 right-4 bg-accent text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Flutter</span>
+          </div>
+
+          <div class="p-7">
+            <div class="flex flex-wrap gap-2 mb-3">
+              <span class="text-xs bg-orange-50 dark:bg-zinc-800 text-accent border border-orange-200 dark:border-zinc-700 px-2.5 py-1 rounded-full font-medium">IoT &amp; Health</span>
+              <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2.5 py-1 rounded-full">Flutter</span>
+              <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2.5 py-1 rounded-full">Bluetooth BLE</span>
+            </div>
+            
+            <h3 class="font-display font-bold text-2xl text-zinc-900 dark:text-white mb-2 group-hover:text-accent transition-colors">
+              FitPulse Pro — Wearable &amp; Fitness Hub
+            </h3>
+            
+            <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+              Cross-platform fitness companion with Bluetooth low-energy hardware sensor synchronization, background calorie/step calculation, and Google Fit &amp; Apple HealthKit integration.
+            </p>
+
+            <ul class="text-xs text-zinc-500 dark:text-zinc-400 space-y-1.5 mb-6">
+              <li class="flex items-center gap-2">
+                <span class="text-accent font-bold">✓</span> Real-time telemetry via BLE communication
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-accent font-bold">✓</span> SQLite offline database with auto-cloud sync
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="px-7 pb-6 pt-2 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
+          <a href="case-study.html" class="inline-flex items-center gap-1.5 text-sm font-semibold text-accent nl">
+            Read Case Study →
+          </a>
+          <span class="text-xs text-zinc-400 font-mono">Flutter &amp; SQLite</span>
+        </div>
+      </article>
+
+      <!-- PROJECT 5: TaskHive Collaboration App -->
+      <article x-show="projectFilter === 'all' || projectFilter === 'flutter'" 
+        x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+        class="reveal d2 card-h group rounded-3xl overflow-hidden bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent dark:hover:border-accent flex flex-col justify-between">
+        <div>
+          <div class="relative h-56 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-950 p-5 flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-accent/10 opacity-30"></div>
+            <div class="w-36 h-48 bg-zinc-950 rounded-2xl border-2 border-zinc-700 p-2 shadow-2xl transform group-hover:scale-105 group-hover:-rotate-1 transition-all duration-300">
+              <div class="w-full h-full bg-gradient-to-b from-zinc-900 to-zinc-950 rounded-xl p-2 flex flex-col justify-between">
+                <div class="flex justify-between items-center text-[9px] text-zinc-400">
+                  <span class="text-accent font-bold">TaskHive</span>
+                  <span>Live Chat</span>
+                </div>
+                <div class="space-y-1">
+                  <div class="p-1 rounded bg-zinc-800 text-[8px] text-white">✓ Sprint Planning</div>
+                  <div class="p-1 rounded bg-accent/20 text-[8px] text-accent font-medium">New Release v2.4</div>
+                </div>
+                <div class="h-5 bg-zinc-800 rounded-md"></div>
+              </div>
+            </div>
+            <span class="absolute top-4 right-4 bg-accent text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Flutter</span>
+          </div>
+
+          <div class="p-7">
+            <div class="flex flex-wrap gap-2 mb-3">
+              <span class="text-xs bg-orange-50 dark:bg-zinc-800 text-accent border border-orange-200 dark:border-zinc-700 px-2.5 py-1 rounded-full font-medium">Productivity</span>
+              <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2.5 py-1 rounded-full">Firebase</span>
+              <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2.5 py-1 rounded-full">BLoC</span>
+            </div>
+            
+            <h3 class="font-display font-bold text-2xl text-zinc-900 dark:text-white mb-2 group-hover:text-accent transition-colors">
+              TaskHive — Agile Team Workspace
+            </h3>
+            
+            <p class="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4">
+              Real-time collaboration app for distributed engineering teams. Features drag-and-drop Kanban boards, team chat with attachments, offline optimistic UI updates, and sub-100ms Firestore sync.
+            </p>
+
+            <ul class="text-xs text-zinc-500 dark:text-zinc-400 space-y-1.5 mb-6">
+              <li class="flex items-center gap-2">
+                <span class="text-accent font-bold">✓</span> Multi-room live chat with push notifications
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-accent font-bold">✓</span> Sub-second Firestore state sync with BLoC
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="px-7 pb-6 pt-2 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
+          <a href="case-study.html" class="inline-flex items-center gap-1.5 text-sm font-semibold text-accent nl">
+            Read Case Study →
+          </a>
+          <span class="text-xs text-zinc-400 font-mono">Flutter &amp; Firebase</span>
+        </div>
+      </article>
+
+      <!-- CALL TO ACTION CARD -->
+      <article class="reveal d3 rounded-3xl p-8 bg-zinc-900 dark:bg-zinc-900/90 border border-zinc-800 hover:border-accent text-white flex flex-col justify-between relative overflow-hidden">
+        <div class="absolute -top-10 -right-10 w-40 h-40 bg-accent/20 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="relative z-10">
+          <span class="text-xs text-accent font-semibold tracking-widest uppercase mb-2 block">Have an App Idea?</span>
+          <h3 class="font-display font-bold text-2xl mb-3">Let's Build Your Next Mobile Success</h3>
+          <p class="text-sm text-zinc-400 leading-relaxed mb-6">
+            Looking to build a native Android app with Kotlin or launch on both iOS &amp; Android with Flutter? I handle everything from system design to Play Store release.
+          </p>
+        </div>
+
+        <div class="relative z-10 pt-4 border-t border-zinc-800">
+          <a href="#contact" class="shimmer inline-flex items-center justify-center w-full bg-accent text-white font-medium text-sm py-3.5 rounded-full shadow-lg shadow-accent/25 hover:bg-accent-light transition-all">
+            Schedule a Discovery Call →
+          </a>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="mt-12 text-center">
+      <a href="projects.html" class="reveal inline-flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300 hover:text-accent dark:hover:text-accent transition-colors nl">
+        <span>View all mobile project repositories &amp; technical archives</span>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MOBILE ARCHITECTURE & ENGINEERING PIPELINE
+═══════════════════════════════════════════════════════════════ -->
+<section id="architecture" class="py-24 bg-zinc-50 dark:bg-zinc-900/40 relative">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <p class="reveal text-xs font-semibold text-accent tracking-widest uppercase mb-2">Engineering Standards</p>
+      <h2 class="reveal d1 font-display font-bold text-3xl sm:text-4xl md:text-5xl text-zinc-900 dark:text-white mb-4">
+        Mobile Development Lifecycle
+      </h2>
+      <p class="reveal d2 text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+        Building maintainable mobile applications that scale gracefully through modular clean architecture, robust testing, and automated deployment pipelines.
+      </p>
+    </div>
+
+    <!-- 4-Step Pipeline Grid -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+
+      <!-- Step 1 -->
+      <div class="reveal d1 p-6 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent transition-all">
+        <div class="w-10 h-10 rounded-2xl bg-orange-50 dark:bg-zinc-800 text-accent font-display font-bold text-lg flex items-center justify-center mb-4">
+          01
+        </div>
+        <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">Clean Architecture</h3>
+        <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          Decoupled Domain, Data, and Presentation layers using MVVM or BLoC patterns. Strict separation of concerns for painless testability.
+        </p>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="reveal d2 p-6 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent transition-all">
+        <div class="w-10 h-10 rounded-2xl bg-orange-50 dark:bg-zinc-800 text-accent font-display font-bold text-lg flex items-center justify-center mb-4">
+          02
+        </div>
+        <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">60fps Fluid UI/UX</h3>
+        <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          Pixel-perfect declarative screens with Jetpack Compose &amp; Flutter widgets. Micro-interactions and silky 60fps animations.
+        </p>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="reveal d3 p-6 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent transition-all">
+        <div class="w-10 h-10 rounded-2xl bg-orange-50 dark:bg-zinc-800 text-accent font-display font-bold text-lg flex items-center justify-center mb-4">
+          03
+        </div>
+        <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">Offline-First Caching</h3>
+        <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          Local SQLite/Room database persistence synchronized with Retrofit/Dio REST APIs and background workers for seamless offline usage.
+        </p>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="reveal d4 p-6 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent transition-all">
+        <div class="w-10 h-10 rounded-2xl bg-orange-50 dark:bg-zinc-800 text-accent font-display font-bold text-lg flex items-center justify-center mb-4">
+          04
+        </div>
+        <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white mb-2">Testing &amp; Store CI/CD</h3>
+        <p class="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          Comprehensive unit testing, ProGuard obfuscation, bundle size reduction, and automated release to Google Play &amp; App Store.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TECHNICAL SKILLS & TOOLING MATRIX
+═══════════════════════════════════════════════════════════════ -->
+<section id="skills" class="py-24 relative">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-14">
+      <div>
+        <p class="reveal text-xs font-semibold text-accent tracking-widest uppercase mb-2">Technical Arsenal</p>
+        <h2 class="reveal d1 font-display font-bold text-3xl sm:text-4xl md:text-5xl text-zinc-900 dark:text-white">
+          Skills &amp; Technologies
+        </h2>
+      </div>
+      <p class="reveal d2 text-sm text-zinc-500 dark:text-zinc-400 max-w-md">
+        Proficiencies honed through commercial projects, client deliveries, and continuous exploration of the latest mobile paradigms.
+      </p>
+    </div>
+
+    <!-- Categorized Skill Cards -->
+    <div class="grid md:grid-cols-3 gap-6">
+
+      <!-- Group 1: Mobile Core & UI -->
+      <div class="reveal d1 p-7 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent transition-all">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="w-8 h-8 rounded-xl bg-orange-50 dark:bg-zinc-800 text-accent flex items-center justify-center text-sm font-bold">📱</span>
+          <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white">Languages &amp; Mobile UI</h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Kotlin</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Dart</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Java</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-orange-50 dark:bg-zinc-800 text-accent border border-orange-200 dark:border-zinc-700 font-semibold">Flutter SDK</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-orange-50 dark:bg-zinc-800 text-accent border border-orange-200 dark:border-zinc-700 font-semibold">Jetpack Compose</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Android SDK</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Material Design 3</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">XML Layouts</span>
+        </div>
+      </div>
+
+      <!-- Group 2: State, Architecture & Backend -->
+      <div class="reveal d2 p-7 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent transition-all">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="w-8 h-8 rounded-xl bg-orange-50 dark:bg-zinc-800 text-accent flex items-center justify-center text-sm font-bold">⚙️</span>
+          <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white">Architecture &amp; State</h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-orange-50 dark:bg-zinc-800 text-accent border border-orange-200 dark:border-zinc-700 font-semibold">MVVM</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Clean Architecture</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Riverpod</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">BLoC</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Kotlin Coroutines</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">StateFlow &amp; LiveData</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">WorkManager</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Laravel API Sync</span>
+        </div>
+      </div>
+
+      <!-- Group 3: Data, Cloud & DevOps -->
+      <div class="reveal d3 p-7 rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 hover:border-accent transition-all">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="w-8 h-8 rounded-xl bg-orange-50 dark:bg-zinc-800 text-accent flex items-center justify-center text-sm font-bold">☁️</span>
+          <h3 class="font-display font-bold text-lg text-zinc-900 dark:text-white">APIs, Cloud &amp; Tools</h3>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-orange-50 dark:bg-zinc-800 text-accent border border-orange-200 dark:border-zinc-700 font-semibold">Retrofit</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Room Database</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Firebase Suite</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Stripe Payment SDK</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">SQLite &amp; SQL</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Git &amp; GitHub</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Postman</span>
+          <span class="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200/60 dark:border-zinc-700/60 hover:border-accent transition-colors">Google Play Console</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     ABOUT & EXPERIENCE
+═══════════════════════════════════════════════════════════════ -->
+<section id="about" class="py-24 bg-zinc-50 dark:bg-zinc-900/40 relative">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid lg:grid-cols-12 gap-12 items-center">
+
+      <!-- Portrait & Profile Card -->
+      <div class="lg:col-span-5 reveal order-2 lg:order-1 flex justify-center">
+        <div class="relative w-72 sm:w-80 lg:w-96">
+          
+          <!-- Decorative ambient circle -->
+          <div class="absolute inset-0 bg-accent/20 rounded-3xl blur-2xl transform rotate-3"></div>
+
+          <div class="relative rounded-3xl overflow-hidden border-2 border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl">
+            <img src="asset/about me.jpg" alt="Heet Danidhariya — Android &amp; Flutter Developer" class="w-full h-auto object-cover" loading="lazy">
+            <div class="p-4 bg-white dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800">
+              <p class="font-display font-bold text-base text-zinc-900 dark:text-white">Heet Danidhariya</p>
+              <p class="text-xs text-accent font-medium">Android Developer @ Code Buddy's</p>
+            </div>
+          </div>
+
+          <!-- Experience Shield Tag -->
+          <div class="absolute -bottom-4 -right-4 bg-accent text-white p-3 rounded-2xl shadow-lg flex items-center gap-2.5">
+            <span class="text-xl">🚀</span>
+            <div>
+              <p class="text-[11px] font-bold tracking-tight">Production-Ready</p>
+              <p class="text-[9px] opacity-90">Android &amp; Flutter Apps</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bio & Professional Journey -->
+      <div class="lg:col-span-7 order-1 lg:order-2">
+        <p class="reveal text-xs font-semibold text-accent tracking-widest uppercase mb-2">About Me</p>
+        <h2 class="reveal d1 font-display font-bold text-3xl sm:text-4xl md:text-5xl text-zinc-900 dark:text-white leading-tight mb-6">
+          Crafting Seamless Mobile Realities From Code to Handheld Devices
+        </h2>
+
+        <div class="space-y-4 text-zinc-600 dark:text-zinc-400 text-base leading-relaxed mb-8">
+          <p class="reveal d2">
+            I'm <strong class="text-zinc-900 dark:text-white font-medium">Heet Danidhariya</strong>, a dedicated Mobile Application Developer specializing in native Android engineering (Kotlin/Compose) and cross-platform Flutter development. I transform complex business specifications into intuitive, lightweight, and fluid mobile products.
+          </p>
+
+          <p class="reveal d3">
+            Currently, I develop production-grade mobile applications as an Android Developer at <strong class="text-zinc-900 dark:text-white font-medium">Code Buddy's</strong>. My day-to-day responsibilities encompass architecting scalable MVVM codebases, seamlessly integrating RESTful APIs with Laravel backend services, implementing secure Stripe checkout flows, and maintaining resilient offline synchronization with Room Database.
+          </p>
+
+          <p class="reveal d4">
+            Whether engineering an interactive fintech wallet with sub-second animation or building an on-demand delivery app with live GPS telemetry, my goal is always the same: exceptional user experience, zero jank, and bulletproof code quality.
+          </p>
+        </div>
+
+        <!-- Career Highlights List -->
+        <div class="reveal d5 grid sm:grid-cols-2 gap-4">
+          <div class="p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-accent font-bold">🏢</span>
+              <p class="text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-wider">Current Position</p>
+            </div>
+            <p class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Android Developer</p>
+            <p class="text-xs text-zinc-500 dark:text-zinc-400">Code Buddy's (Full-Time)</p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-accent font-bold">🎯</span>
+              <p class="text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-wider">Specialty Focus</p>
+            </div>
+            <p class="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Android &amp; Flutter Apps</p>
+            <p class="text-xs text-zinc-500 dark:text-zinc-400">Clean Architecture, 60fps UI</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     CONTACT / MOBILE PROJECT INQUIRY
+═══════════════════════════════════════════════════════════════ -->
+<section id="contact" class="py-24 relative" x-data="{ platform: 'both' }">
+  <div class="max-w-6xl mx-auto px-6">
+    
+    <div class="bg-zinc-900 dark:bg-zinc-900 rounded-[36px] p-8 sm:p-12 md:p-16 relative overflow-hidden text-white border border-zinc-800">
+      <!-- Ambient decorative glow -->
+      <div class="absolute top-0 right-0 w-80 h-80 bg-accent/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+      <div class="absolute bottom-0 left-0 w-60 h-60 bg-accent/15 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+
+      <div class="relative z-10 grid lg:grid-cols-12 gap-12 items-start">
+
+        <!-- Left Column: Contact details -->
+        <div class="lg:col-span-5">
+          <p class="reveal text-xs font-semibold text-accent tracking-widest uppercase mb-2">Ready to Collaborate?</p>
+          <h2 class="reveal d1 font-display font-bold text-3xl sm:text-4xl md:text-5xl text-white leading-tight mb-6">
+            Let's build your next mobile experience.
+          </h2>
+
+          <p class="reveal d2 text-zinc-400 text-sm leading-relaxed mb-8">
+            Whether you need a brand-new Flutter cross-platform app, a dedicated Android native application, or architecture consulting, I'd love to discuss how we can bring it to life.
+          </p>
+
+          <div class="reveal d3 flex flex-col gap-4">
+            <!-- Email -->
+            <a href="mailto:heetdanidhariya7874@gmail.com" class="group flex items-center gap-3.5 text-zinc-300 hover:text-white transition-colors">
+              <span class="w-10 h-10 flex items-center justify-center bg-zinc-800 rounded-xl group-hover:bg-accent transition-colors shrink-0 text-white">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              </span>
+              <div>
+                <p class="text-[11px] text-zinc-500 uppercase font-semibold">Direct Email</p>
+                <span class="text-sm font-medium">heetdanidhariya7874@gmail.com</span>
+              </div>
+            </a>
+
+            <!-- LinkedIn -->
+            <a href="https://www.linkedin.com/in/heet-danidhariya-02a9062b4/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3.5 text-zinc-300 hover:text-white transition-colors">
+              <span class="w-10 h-10 flex items-center justify-center bg-zinc-800 rounded-xl group-hover:bg-accent transition-colors shrink-0 text-white">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              </span>
+              <div>
+                <p class="text-[11px] text-zinc-500 uppercase font-semibold">Professional Profile</p>
+                <span class="text-sm font-medium">linkedin.com/in/heet-danidhariya</span>
+              </div>
+            </a>
+
+            <!-- Location & Availability -->
+            <div class="flex items-center gap-3.5 text-zinc-300 pt-2">
+              <span class="w-10 h-10 flex items-center justify-center bg-zinc-800 rounded-xl shrink-0 text-accent">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              </span>
+              <div>
+                <p class="text-[11px] text-zinc-500 uppercase font-semibold">Status</p>
+                <span class="text-sm font-medium">Remote &amp; Contract Worldwide · Fast Response</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive Mobile App Inquiry Form -->
+        <div class="lg:col-span-7 reveal d2">
+          <form @submit.prevent="alert('Thank you for reaching out, Heet will reply promptly!')" class="space-y-4">
+            
+            <!-- Platform Needed Toggle -->
+            <div>
+              <label class="block text-xs font-semibold text-zinc-400 mb-2">Target Platform</label>
+              <div class="grid grid-cols-3 gap-2">
+                <button type="button" @click="platform='android'" :class="platform==='android' ? 'bg-accent text-white border-accent' : 'bg-zinc-800 text-zinc-300 border-zinc-700'" class="py-2.5 px-3 rounded-xl border text-xs font-medium transition-all text-center">
+                  Android Native
+                </button>
+                <button type="button" @click="platform='flutter'" :class="platform==='flutter' ? 'bg-accent text-white border-accent' : 'bg-zinc-800 text-zinc-300 border-zinc-700'" class="py-2.5 px-3 rounded-xl border text-xs font-medium transition-all text-center">
+                  Flutter (iOS + Android)
+                </button>
+                <button type="button" @click="platform='both'" :class="platform==='both' ? 'bg-accent text-white border-accent' : 'bg-zinc-800 text-zinc-300 border-zinc-700'" class="py-2.5 px-3 rounded-xl border text-xs font-medium transition-all text-center">
+                  Consultation / Both
+                </button>
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="cname" class="block text-xs font-semibold text-zinc-400 mb-1.5">Your Name <span class="text-accent">*</span></label>
+                <input type="text" id="cname" required placeholder="Alex Rivera"
+                  class="w-full bg-zinc-800/90 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-accent transition-colors">
+              </div>
+              <div>
+                <label for="cemail" class="block text-xs font-semibold text-zinc-400 mb-1.5">Your Email <span class="text-accent">*</span></label>
+                <input type="email" id="cemail" required placeholder="alex@company.com"
+                  class="w-full bg-zinc-800/90 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-accent transition-colors">
+              </div>
+            </div>
+
+            <div>
+              <label for="csubject" class="block text-xs font-semibold text-zinc-400 mb-1.5">App Overview / Subject</label>
+              <input type="text" id="csubject" placeholder="e.g. New Fintech Mobile App Development"
+                class="w-full bg-zinc-800/90 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-accent transition-colors">
+            </div>
+
+            <div>
+              <label for="cmessage" class="block text-xs font-semibold text-zinc-400 mb-1.5">Project Scope &amp; Features <span class="text-accent">*</span></label>
+              <textarea id="cmessage" rows="4" required placeholder="Briefly describe your app requirements, target timeline, and any specific integrations (Firebase, Stripe, REST API, etc.)..."
+                class="w-full bg-zinc-800/90 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-accent transition-colors resize-none"></textarea>
+            </div>
+
+            <button type="submit" class="shimmer w-full bg-accent text-white font-display font-bold text-sm py-4 rounded-xl hover:bg-accent-light shadow-lg shadow-accent/25 transition-all">
+              Send Message &amp; Request Discovery Call →
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════════════ -->
+<footer class="border-t border-zinc-200/80 dark:border-zinc-800/80 bg-white dark:bg-zinc-950 py-10 transition-colors">
+  <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
+    <div class="flex items-center gap-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-accent"></span>
+      <span class="font-display font-bold text-zinc-900 dark:text-white text-base">Heet Danidhariya</span>
+      <span class="text-zinc-400 text-sm font-normal">· Android &amp; Flutter Mobile Developer</span>
+    </div>
+
+    <p class="text-xs text-zinc-500 dark:text-zinc-400 text-center sm:text-right">
+      © <span id="year"></span> Heet Danidhariya. All rights reserved. <br class="hidden sm:inline">
+      Crafted with precision, Kotlin &amp; Flutter paradigms.
+    </p>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     ALPINE & INTERACTIVITY SCRIPTS
+═══════════════════════════════════════════════════════════════ -->
+<script>
+function app() {
+  return {
+    dark: false,
+    mm: false,
+    sc: false,
+    s: 'hero',
+    activeDemo: 'fintech',
+    counts: {
+      projects: 0,
+      crashFree: 0,
+      experience: 0
+    },
+    counterAnimated: false,
+
+    init() {
+      // Theme detection & persistence
+      this.dark = localStorage.getItem('theme') === 'dark' ||
+        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      this.$watch('dark', v => localStorage.setItem('theme', v ? 'dark' : 'light'));
+
+      // Scroll listener
+      window.addEventListener('scroll', () => {
+        this.sc = window.scrollY > 20;
+        this.updateSection();
+        this.checkCounterAnimation();
+      }, { passive: true });
+
+      // Intersection Observer for scroll reveals
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+      // Dynamic year
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // Trigger counter animation on mount if hero is visible
+      setTimeout(() => this.animateCounters(), 400);
+    },
+
+    updateSection() {
+      const atBottom = (window.innerHeight + window.scrollY) >= document.body.scrollHeight - 70;
+      if (atBottom) { this.s = 'contact'; return; }
+      const ids = ['contact', 'about', 'skills', 'architecture', 'services', 'work', 'hero'];
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (el && window.scrollY >= el.offsetTop - 150) {
+          this.s = id;
+          return;
+        }
+      }
+    },
+
+    checkCounterAnimation() {
+      if (!this.counterAnimated && window.scrollY < 600) {
+        this.animateCounters();
+      }
+    },
+
+    animateCounters() {
+      if (this.counterAnimated) return;
+      this.counterAnimated = true;
+
+      // Animate projects counter to 15
+      let p = 0;
+      const pTimer = setInterval(() => {
+        p++;
+        this.counts.projects = p;
+        if (p >= 15) clearInterval(pTimer);
+      }, 60);
+
+      // Animate crash free to 99.8%
+      let cf = 80;
+      const cfTimer = setInterval(() => {
+        cf += 1.5;
+        if (cf >= 99.8) {
+          this.counts.crashFree = 99.8;
+          clearInterval(cfTimer);
+        } else {
+          this.counts.crashFree = Math.round(cf * 10) / 10;
+        }
+      }, 40);
+
+      // Animate experience to 2
+      let exp = 0;
+      const expTimer = setInterval(() => {
+        exp++;
+        this.counts.experience = exp;
+        if (exp >= 2) clearInterval(expTimer);
+      }, 300);
+    }
+  }
+}
+</script>
+
+</body>
+</html>
