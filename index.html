@@ -34,6 +34,7 @@ tailwind.config = {
 </script>
 
 <style>
+[x-cloak]{display:none !important}
 *,*::before,*::after{box-sizing:border-box}
 html,body{font-family:'DM Sans',sans-serif;scroll-behavior:smooth}
 h1,h2,h3,h4,h5,h6{font-family:'PT Sans',sans-serif}
@@ -1280,35 +1281,153 @@ body::before{
 
         <!-- Right Column: Interactive Mobile App Inquiry Form -->
         <div class="lg:col-span-7 reveal d2">
-          <form @submit.prevent="alert('Thank you for reaching out, Heet will reply promptly!')" class="space-y-4">
+          <form 
+            x-data="{
+              name: '',
+              email: '',
+              subject: '',
+              message: '',
+              loading: false,
+              status: null,
+              statusMessage: '',
+              async handleSubmit() {
+                if (!this.name || !this.email || !this.message) return;
+                this.loading = true;
+                this.status = null;
+                this.statusMessage = '';
+
+                const payload = {
+                  name: this.name,
+                  email: this.email,
+                  _subject: this.subject ? `[Portfolio] ${this.subject}` : `[Portfolio Inquiry] Message from ${this.name}`,
+                  message: this.message,
+                  _template: 'table',
+                  _captcha: 'false'
+                };
+
+                try {
+                  const res = await fetch('https://formsubmit.co/ajax/heetdanidhariya7874@gmail.com', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                  });
+
+                  const data = await res.json().catch(() => ({}));
+
+                  if (res.ok || data.success === 'true' || data.success === true) {
+                    this.status = 'success';
+                    this.statusMessage = 'Thank you! Your message has been sent directly to Heet. I will reply to you promptly at ' + this.email + '.';
+                    this.name = '';
+                    this.email = '';
+                    this.subject = '';
+                    this.message = '';
+                  } else if (data.message && data.message.toLowerCase().includes('activation')) {
+                    this.status = 'success';
+                    this.statusMessage = 'Thank you! Your message was submitted successfully. (Note: On the first submission, FormSubmit sends an activation link to verify the recipient mailbox).';
+                    this.name = '';
+                    this.email = '';
+                    this.subject = '';
+                    this.message = '';
+                  } else {
+                    throw new Error(data.message || 'Submission failed');
+                  }
+                } catch (err) {
+                  console.error('Contact form submission error:', err);
+                  if (window.location.protocol === 'file:') {
+                    this.status = 'error';
+                    this.statusMessage = 'Form submission via AJAX requires running through a local web server (powershell ./server.ps1) or live hosting. You can also email Heet directly at heetdanidhariya7874@gmail.com.';
+                  } else {
+                    this.status = 'error';
+                    this.statusMessage = 'Could not deliver the message. Please try again or reach out directly at heetdanidhariya7874@gmail.com.';
+                  }
+                } finally {
+                  this.loading = false;
+                }
+              }
+            }"
+            @submit.prevent="handleSubmit()"
+            action="https://formsubmit.co/heetdanidhariya7874@gmail.com"
+            method="POST"
+            class="space-y-4"
+          >
+            <!-- FormSubmit configuration fields for fallback & spam protection -->
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_subject" value="New Portfolio Inquiry - Heet Danidhariya">
+            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
 
             <div class="grid sm:grid-cols-2 gap-4">
               <div>
                 <label for="cname" class="block text-xs font-semibold text-zinc-400 mb-1.5">Your Name <span class="text-accent">*</span></label>
-                <input type="text" id="cname" required placeholder="Alex Rivera"
+                <input type="text" id="cname" name="name" x-model="name" required placeholder="Alex Rivera"
                   class="w-full bg-zinc-800/90 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-accent transition-colors">
               </div>
               <div>
                 <label for="cemail" class="block text-xs font-semibold text-zinc-400 mb-1.5">Your Email <span class="text-accent">*</span></label>
-                <input type="email" id="cemail" required placeholder="alex@company.com"
+                <input type="email" id="cemail" name="email" x-model="email" required placeholder="alex@company.com"
                   class="w-full bg-zinc-800/90 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-accent transition-colors">
               </div>
             </div>
 
             <div>
               <label for="csubject" class="block text-xs font-semibold text-zinc-400 mb-1.5">App Overview / Subject</label>
-              <input type="text" id="csubject" placeholder="e.g. New Fintech Mobile App Development"
+              <input type="text" id="csubject" name="subject" x-model="subject" placeholder="e.g. New Fintech Mobile App Development"
                 class="w-full bg-zinc-800/90 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-accent transition-colors">
             </div>
 
             <div>
               <label for="cmessage" class="block text-xs font-semibold text-zinc-400 mb-1.5">Project Scope &amp; Features <span class="text-accent">*</span></label>
-              <textarea id="cmessage" rows="4" required placeholder="Briefly describe your app requirements, target timeline, and any specific integrations (Firebase, Stripe, REST API, etc.)..."
+              <textarea id="cmessage" name="message" x-model="message" rows="4" required placeholder="Briefly describe your app requirements, target timeline, and any specific integrations (Firebase, Stripe, REST API, etc.)..."
                 class="w-full bg-zinc-800/90 border border-zinc-700 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-accent transition-colors resize-none"></textarea>
             </div>
 
-            <button type="submit" class="shimmer w-full bg-accent text-white font-display font-bold text-sm py-4 rounded-xl hover:bg-accent-light shadow-lg shadow-accent/25 transition-all">
-              Send Message &amp; Request Discovery Call →
+            <!-- Feedback Alert: Success -->
+            <div x-show="status === 'success'" x-cloak x-transition class="p-4 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-sm flex items-start gap-3 shadow-lg shadow-emerald-500/5">
+              <span class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                </svg>
+              </span>
+              <div>
+                <p class="font-bold text-white text-sm">Message Sent Successfully</p>
+                <p class="text-xs text-zinc-300 mt-0.5 leading-relaxed" x-text="statusMessage"></p>
+              </div>
+            </div>
+
+            <!-- Feedback Alert: Notice / Error -->
+            <div x-show="status === 'error'" x-cloak x-transition class="p-4 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-300 text-sm flex items-start gap-3 shadow-lg shadow-rose-500/5">
+              <span class="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 mt-0.5">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+              </span>
+              <div>
+                <p class="font-bold text-white text-sm">Delivery Notice</p>
+                <p class="text-xs text-zinc-300 mt-0.5 leading-relaxed" x-text="statusMessage"></p>
+              </div>
+            </div>
+
+            <button 
+              type="submit" 
+              :disabled="loading"
+              :class="loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-accent-light'"
+              class="shimmer w-full bg-accent text-white font-display font-bold text-sm py-4 rounded-xl shadow-lg shadow-accent/25 transition-all flex items-center justify-center gap-2"
+            >
+              <template x-if="loading">
+                <span class="inline-flex items-center gap-2">
+                  <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                  </svg>
+                  Sending Message...
+                </span>
+              </template>
+              <template x-if="!loading">
+                <span>Send Message &amp; Request Discovery Call →</span>
+              </template>
             </button>
           </form>
         </div>
