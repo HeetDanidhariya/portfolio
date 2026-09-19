@@ -12,6 +12,7 @@ $mime = @{
     ".jpeg" = "image/jpeg"
     ".webp" = "image/webp"
     ".svg"  = "image/svg+xml"
+    ".pdf"  = "application/pdf"
 }
 
 $listener = New-Object System.Net.HttpListener
